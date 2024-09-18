@@ -11,7 +11,6 @@ const AdminDashboard = () => {
   const [students, setStudents] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [activeSection, setActiveSection] = useState("overview");
 
   useEffect(() => {
     fetchData();
@@ -62,187 +61,148 @@ const AdminDashboard = () => {
     }
   };
 
-  const renderOverview = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-2">Total Students</h2>
-        <p className="text-4xl font-bold text-blue-600">
-          {programStats.totalStudents}
-        </p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-2">Total Mentors</h2>
-        <p className="text-4xl font-bold text-green-600">
-          {programStats.totalMentors}
-        </p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-2">Total Projects</h2>
-        <p className="text-4xl font-bold text-purple-600">
-          {programStats.totalProjects}
-        </p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-2">Completion Rate</h2>
-        <p className="text-4xl font-bold text-orange-600">
-          {programStats.completionRate}%
-        </p>
-      </div>
-    </div>
-  );
-
-  const renderStudents = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Students</h2>
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Year</th>
-            <th>Specialization</th>
-            <th>Project</th>
-            <th>Mentor</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map((student) => (
-            <tr key={student.id}>
-              <td>{student.name}</td>
-              <td>{student.year}</td>
-              <td>{student.specialization}</td>
-              <td>{student.project}</td>
-              <td>{student.mentor}</td>
-              <td>
-                <button
-                  onClick={() =>
-                    handleUpdateStudent(student.id, {
-                      /* updated data */
-                    })
-                  }
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
-                >
-                  Edit
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  const renderMentors = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Mentors</h2>
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Expertise</th>
-            <th>Assigned Students</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mentors.map((mentor) => (
-            <tr key={mentor.id}>
-              <td>{mentor.name}</td>
-              <td>{mentor.expertise}</td>
-              <td>{mentor.assignedStudents.join(", ")}</td>
-              <td>
-                <button
-                  onClick={() =>
-                    handleUpdateMentor(mentor.id, {
-                      /* updated data */
-                    })
-                  }
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
-                >
-                  Edit
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  const renderProjects = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Projects</h2>
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Student</th>
-            <th>Mentor</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projects.map((project) => (
-            <tr key={project.id}>
-              <td>{project.title}</td>
-              <td>{project.description}</td>
-              <td>{project.status}</td>
-              <td>{project.student}</td>
-              <td>{project.mentor}</td>
-              <td>
-                <button
-                  onClick={() =>
-                    handleUpdateProject(project.id, {
-                      /* updated data */
-                    })
-                  }
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
-                >
-                  Edit
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-
   return (
     <div className="container mx-auto mt-8 p-4">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-      <div className="mb-6">
-        <button
-          onClick={() => setActiveSection("overview")}
-          className={`mr-4 ${activeSection === "overview" ? "font-bold" : ""}`}
-        >
-          Overview
-        </button>
-        <button
-          onClick={() => setActiveSection("students")}
-          className={`mr-4 ${activeSection === "students" ? "font-bold" : ""}`}
-        >
-          Students
-        </button>
-        <button
-          onClick={() => setActiveSection("mentors")}
-          className={`mr-4 ${activeSection === "mentors" ? "font-bold" : ""}`}
-        >
-          Mentors
-        </button>
-        <button
-          onClick={() => setActiveSection("projects")}
-          className={`mr-4 ${activeSection === "projects" ? "font-bold" : ""}`}
-        >
-          Projects
-        </button>
+
+      {/* Program Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-2">Total Students</h2>
+          <p className="text-4xl font-bold text-blue-600">
+            {programStats.totalStudents}
+          </p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-2">Total Mentors</h2>
+          <p className="text-4xl font-bold text-green-600">
+            {programStats.totalMentors}
+          </p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-2">Total Projects</h2>
+          <p className="text-4xl font-bold text-purple-600">
+            {programStats.totalProjects}
+          </p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-2">Completion Rate</h2>
+          <p className="text-4xl font-bold text-orange-600">
+            {programStats.completionRate}%
+          </p>
+        </div>
       </div>
-      {activeSection === "overview" && renderOverview()}
-      {activeSection === "students" && renderStudents()}
-      {activeSection === "mentors" && renderMentors()}
-      {activeSection === "projects" && renderProjects()}
+
+      {/* Students Management */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-4">Students Management</h2>
+        <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Year</th>
+              <th className="p-3 text-left">Specialization</th>
+              <th className="p-3 text-left">Project</th>
+              <th className="p-3 text-left">Mentor</th>
+              <th className="p-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.map((student) => (
+              <tr key={student.id}>
+                <td className="p-3">{student.name}</td>
+                <td className="p-3">{student.year}</td>
+                <td className="p-3">{student.specialization}</td>
+                <td className="p-3">{student.project}</td>
+                <td className="p-3">{student.mentor}</td>
+                <td className="p-3">
+                  <button
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                    onClick={() => {
+                      // Open a modal or form to edit student details
+                      // Then call handleUpdateStudent with the updated data
+                    }}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mentors Management */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-4">Mentors Management</h2>
+        <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Expertise</th>
+              <th className="p-3 text-left">Assigned Students</th>
+              <th className="p-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mentors.map((mentor) => (
+              <tr key={mentor.id}>
+                <td className="p-3">{mentor.name}</td>
+                <td className="p-3">{mentor.expertise}</td>
+                <td className="p-3">{mentor.assignedStudents.join(", ")}</td>
+                <td className="p-3">
+                  <button
+                    className="bg-green-500 text-white px-3 py-1 rounded"
+                    onClick={() => {
+                      // Open a modal or form to edit mentor details
+                      // Then call handleUpdateMentor with the updated data
+                    }}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Projects Management */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-4">Projects Management</h2>
+        <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-3 text-left">Title</th>
+              <th className="p-3 text-left">Description</th>
+              <th className="p-3 text-left">Status</th>
+              <th className="p-3 text-left">Assigned Student</th>
+              <th className="p-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {projects.map((project) => (
+              <tr key={project.id}>
+                <td className="p-3">{project.title}</td>
+                <td className="p-3">{project.description}</td>
+                <td className="p-3">{project.status}</td>
+                <td className="p-3">{project.assignedStudent}</td>
+                <td className="p-3">
+                  <button
+                    className="bg-purple-500 text-white px-3 py-1 rounded"
+                    onClick={() => {
+                      // Open a modal or form to edit project details
+                      // Then call handleUpdateProject with the updated data
+                    }}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

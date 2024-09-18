@@ -10,18 +10,17 @@ const StudentDashboard = () => {
     mentor: "",
     progress: 0,
   });
-  const [activeSection, setActiveSection] = useState("overview");
   const [milestones, setMilestones] = useState([]);
   const [feedback, setFeedback] = useState([]);
 
   useEffect(() => {
-    fetchData();
+    fetchStudentData();
   }, []);
 
-  const fetchData = async () => {
+  const fetchStudentData = async () => {
     try {
-      const infoResponse = await axios.get("/api/student/info");
-      setStudentInfo(infoResponse.data);
+      const studentResponse = await axios.get("/api/student/info");
+      setStudentInfo(studentResponse.data);
 
       const milestonesResponse = await axios.get("/api/student/milestones");
       setMilestones(milestonesResponse.data);
@@ -29,13 +28,16 @@ const StudentDashboard = () => {
       const feedbackResponse = await axios.get("/api/student/feedback");
       setFeedback(feedbackResponse.data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching student data:", error);
     }
   };
 
-  const renderOverview = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="bg-white p-6 rounded-lg shadow-md">
+  return (
+    <div className="container mx-auto mt-8 p-4">
+      <h1 className="text-3xl font-bold mb-6">Student Dashboard</h1>
+
+      {/* Personal Information */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
         <p>
           <strong>Name:</strong> {studentInfo.name}
@@ -47,7 +49,9 @@ const StudentDashboard = () => {
           <strong>Specialization:</strong> {studentInfo.specialization}
         </p>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
+
+      {/* Project Details */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 className="text-xl font-semibold mb-4">Project Details</h2>
         <p>
           <strong>Project:</strong> {studentInfo.project}
@@ -68,68 +72,39 @@ const StudentDashboard = () => {
           <p className="text-right">{studentInfo.progress}%</p>
         </div>
       </div>
-    </div>
-  );
 
-  const renderMilestones = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Milestones</h2>
-      <ul>
-        {milestones.map((milestone, index) => (
-          <li key={index} className="mb-4">
-            <h3 className="font-semibold">{milestone.title}</h3>
-            <p>Due Date: {milestone.dueDate}</p>
-            <p>Status: {milestone.status}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-
-  const renderFeedback = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Feedback</h2>
-      <ul>
-        {feedback.map((item, index) => (
-          <li key={index} className="mb-4">
-            <p>
-              <strong>{item.from}:</strong> {item.message}
-            </p>
-            <p className="text-sm text-gray-500">Date: {item.date}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-
-  return (
-    <div className="container mx-auto mt-8 p-4">
-      <h1 className="text-3xl font-bold mb-6">Student Dashboard</h1>
-      <div className="mb-6">
-        <button
-          onClick={() => setActiveSection("overview")}
-          className={`mr-4 ${activeSection === "overview" ? "font-bold" : ""}`}
-        >
-          Overview
-        </button>
-        <button
-          onClick={() => setActiveSection("milestones")}
-          className={`mr-4 ${
-            activeSection === "milestones" ? "font-bold" : ""
-          }`}
-        >
-          Milestones
-        </button>
-        <button
-          onClick={() => setActiveSection("feedback")}
-          className={`mr-4 ${activeSection === "feedback" ? "font-bold" : ""}`}
-        >
-          Feedback
-        </button>
+      {/* Milestones */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-xl font-semibold mb-4">Milestones</h2>
+        <ul className="list-disc pl-5">
+          {milestones.map((milestone, index) => (
+            <li key={index} className="mb-2">
+              <span
+                className={
+                  milestone.completed ? "line-through text-gray-500" : ""
+                }
+              >
+                {milestone.description}
+              </span>
+              {milestone.completed && (
+                <span className="ml-2 text-green-500">✓</span>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
-      {activeSection === "overview" && renderOverview()}
-      {activeSection === "milestones" && renderMilestones()}
-      {activeSection === "feedback" && renderFeedback()}
+
+      {/* Feedback */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-xl font-semibold mb-4">Feedback</h2>
+        {feedback.map((item, index) => (
+          <div key={index} className="mb-4 p-4 bg-gray-100 rounded">
+            <p className="font-semibold">{item.from}</p>
+            <p className="text-gray-700">{item.message}</p>
+            <p className="text-sm text-gray-500 mt-2">{item.date}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
